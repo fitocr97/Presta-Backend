@@ -1,13 +1,13 @@
 import { db } from '../database/connection.js'
 
-const create = async ({ name, phone, address, loan, interests, total, balance, type, status }) => { //async por la solicitud al server
+const create = async ({ name, phone, address, loan, interest, total, balance, type, status }) => { //async por la solicitud al server
     const query = {    //parametrizar los datos evitar inyecciones sql
         text: `
-        INSERT INTO clients (name, phone, address, loan, interests, total, balance, type, status) 
-        VALUES($1, $2, $3, $4, $5, $6, $7, $8 $9)
+        INSERT INTO clients (name, phone, address, loan, interest, total, balance, type, status) 
+        VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9)
         RETURNING *
         `,
-        values: [name, phone, address, loan, interests, total, balance, type, status] //destructory 
+        values: [name, phone, address, loan, interest, total, balance, type, status] //destructory 
     }
         //returning devolver datos
     const { rows } = await db.query(query)  //db recibe el query, devuelve un objeto las rows que las devolvemos al controller
@@ -30,7 +30,7 @@ const findOneByName = async (name) => {
 const findAllBiweekly = async () => {
     const query = {
         text: `
-        select * from clients where type = 'semanal'
+        select * from clients where type = 'quincenal'
         `
     }
     const { rows } = await db.query(query)
@@ -40,7 +40,7 @@ const findAllBiweekly = async () => {
 const findAllWeekly = async () => {
     const query = {
         text: `
-        select * from clients where type = 'quincenal'
+        select * from clients where type = 'semanal'
         `
     }
     const { rows } = await db.query(query)
