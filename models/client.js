@@ -27,6 +27,28 @@ const findOneByName = async (name) => {
     return rows[0]
 }
 
+
+
+
+const findBalance = async (cud) => {
+    console.log("estoy en modelClient: " + cud);
+
+    const query = {
+        text: `SELECT balance FROM clients WHERE cud = $1`,
+        values: [cud],
+    };
+
+    const { rows } = await db.query(query);
+
+    // Asegúrate de que hay al menos una fila y devuelve el balance
+    if (rows.length > 0) {
+        return rows[0].balance; // Devuelve solo el valor de balance
+    } else {
+        return null; // O algún valor que indique que no se encontró balance
+    }
+};
+
+
 const findAllBiweekly = async () => {
     const query = {
         text: `
@@ -83,13 +105,42 @@ const updateClient = async (cid, name, phone, address, loan, interests, total, b
     return rows[0]
 }
 
-const deleteOneByName = async (name) => {
+const updateBalance = async (cid, balance) => {
     const query = {
         text: `
-        DELETE FROM account
-        WHERE name = $1
+        UPDATE clients
+        SET 
+            balance = $2
+        WHERE cud = $1;
+        `,
+        values: [cid, balance]
+    }
+    const { rows } = await db.query(query)
+    return rows[0]
+}
+
+const GetNameClient = async (name) => {
+    console.log(name)
+    const query = {
+        text: `
+        SELECT clients.name
+        FROM clients
+        JOIN accounts ON accounts.aid = clients.cud
+        WHERE accounts.aid = $1 Limit 1;
         `,
         values: [name]
+    }
+    const { rows } = await db.query(query)
+    return rows[0]
+}
+
+const deleteOneById = async (cud) => {
+    const query = {
+        text: `
+        DELETE FROM clients
+        WHERE cud = $1
+        `,
+        values: [cud]
     }
     const { rowCount } = await db.query(query)
     return rowCount > 0
@@ -103,5 +154,10 @@ export const ClientModel = {
     findAllWeekly,
     findOneByUid,
     updateClient,
-    deleteOneByName
+    deleteOneById,
+    GetNameClient,
+    updateBalance,
+    findBalance,
+    
 }
+

@@ -8,6 +8,13 @@ const create = async(req, res) => {
         if (!name || !phone || !address || !loan || !interest || !total || !balance || !type) {
             return res.status(400).json({ ok: false, msg: "Missing required fields: name, phone, address, loan, interests, total, balance, type" }) //badrequest
         }
+
+
+        //verificar si el cliente ya existe
+        const client = await ClientModel.findOneByName(name)
+        if (client) {
+            return res.status(409).json({ ok: false, msg: "Name already exists" })
+        }
     
         let status = "Espera"
 
@@ -28,7 +35,6 @@ const create = async(req, res) => {
 const findWeekly= async (req, res) => {
     try {
         const clientsWeekly = await ClientModel.findAllWeekly() //usa el model
-
         return res.json({ ok: true, msg: clientsWeekly })
     } catch (error) {
         console.log(error)

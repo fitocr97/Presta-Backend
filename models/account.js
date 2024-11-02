@@ -1,9 +1,10 @@
 import { db } from '../database/connection.js'
 
 const create = async ({ aid, payment, balance, date }) => { //async por la solicitud al server
+    console.log(aid, payment, balance, date)
     const query = {    //parametrizar los datos evitar inyecciones sql
         text: `
-        INSERT INTO account (aid, payment, balance, date) 
+        INSERT INTO accounts (aid, payment, balance, date) 
         VALUES($1, $2, $3, $4)
         RETURNING aid, payment, balance, date
         `,
@@ -19,7 +20,7 @@ const create = async ({ aid, payment, balance, date }) => { //async por la solic
 const findOneByUid = async (aid) => {
     const query = {
         text: `
-        SELECT * FROM account
+        SELECT * FROM accounts
         WHERE aid = $1
         `,
         values: [aid]
@@ -31,7 +32,7 @@ const findOneByUid = async (aid) => {
 const deleteOneByUid = async (aid) => {
     const query = {
         text: `
-        DELETE FROM account
+        DELETE FROM accounts
         WHERE aid = $1
         `,
         values: [aid]
@@ -42,7 +43,7 @@ const deleteOneByUid = async (aid) => {
 
 
 //exports exportamos el objeto
-export const AcountModel = {
+export const AccountModel = {
     create,
     findOneByUid,
     deleteOneByUid
