@@ -28,8 +28,6 @@ const findOneByName = async (name) => {
 }
 
 
-
-
 const findBalance = async (cud) => {
     console.log("estoy en modelClient: " + cud);
 
@@ -40,7 +38,7 @@ const findBalance = async (cud) => {
 
     const { rows } = await db.query(query);
 
-    // Asegúrate de que hay al menos una fila y devuelve el balance
+    // hay al menos una fila y devuelve el balance
     if (rows.length > 0) {
         return rows[0].balance; // Devuelve solo el valor de balance
     } else {
@@ -69,37 +67,48 @@ const findAllWeekly = async () => {
     return rows //todas las filas
 }
 
-//buscar por id
-const findOneByUid = async (cid) => {
+const findOneByUid = async (cud) => {
     const query = {
         text: `
         SELECT * FROM clients
-        WHERE cid = $1
+        WHERE cud = $1
         `,
-        values: [cid]
-    }
-    const { rows } = await db.query(query)
-    return rows[0]
-}
+        values: [cud]
+    };
 
-const updateClient = async (cid, name, phone, address, loan, interests, total, balance, type, status) => {
+    try {
+        const { rows } = await db.query(query);
+
+        // Si rows tiene al menos un resultado, devolver el primero
+        if (rows.length > 0) {
+            return rows[0];  // Devuelve solo el primer cliente encontrado
+        } else {
+            return null;  // O un mensaje adecuado si no se encuentra el cliente
+        }
+    } catch (err) {
+        console.error('Error al buscar cliente por ID:', err);
+        throw err;
+    }
+};
+
+const updateClient = async (cud, name, phone, address, loan, interest, total, balance, type, status) => {
     const query = {
         text: `
         UPDATE 
+            clients 
         SET 
             name = $2, 
             phone = $3, 
             address = $4, 
             loan = $5, 
-            interests = $6, 
-            total = $7,
+            interest = $6, 
+            total = $7, 
             balance = $8, 
             type = $9, 
             status = $10
-        WHERE id = $1;
-        RETURNING *
+        WHERE cud = $1;
         `,
-        values: [cid, name, phone, address, loan, interests, total, balance, type, status]
+        values: [cud, name, phone, address, loan, interest, total, balance, type, status]
     }
     const { rows } = await db.query(query)
     return rows[0]
@@ -146,6 +155,68 @@ const deleteOneById = async (cud) => {
     return rowCount > 0
 }
 
+
+//actualizar estado semanal 
+const updateStatusWeekly = async () => {
+    console.log("Llego a actualizar weekly");
+    const query = {
+        text: `
+        UPDATE CLIENTS
+        SET STATUS = CASE 
+            WHEN STATUS = 'Pago' THEN 'Espera'
+            WHEN STATUS = 'Espera' THEN 'Falta'
+            ELSE STATUS
+        END
+        WHERE TYPE = 'semanal';`
+    };
+
+    try {
+        const { rowCount } = await db.query(query)
+        return "Se actualizo el estado semanal"; // O
+    } catch (err) {
+        console.error('Error actualizando el estado de los clientes semanales:', err);
+        throw err;
+    }
+};
+
+//actualizar estado quinsenal 
+const updateStatusBiWeekly = async () => {
+    console.log("Llego a actualizar Biweekly");
+    const query = {
+        text: `
+        UPDATE CLIENTS
+        SET STATUS = CASE 
+            WHEN STATUS = 'Pago' THEN 'Espera'
+            WHEN STATUS = 'Espera' THEN 'Falta'
+            ELSE STATUS
+        END
+        WHERE TYPE = 'quincenal';`
+    };
+
+    try {
+        const { rowCount } = await db.query(query)
+        return "Se actualizo el estado quincenal"; // 
+    } catch (err) {
+        console.error('Error actualizando el estado de los clientes semanales:', err);
+        throw err;
+    }
+};
+
+//actualizar estado a pagado 
+const updateStatus = async (cid) => {
+    const query = {
+        text: `
+        UPDATE clients
+        SET 
+            status = 'Pago'
+        WHERE cud = $1;
+        `,
+        values: [cid]
+    }
+    const { rows } = await db.query(query)
+    return rows[0]
+}
+
 //exports exportamos el objeto
 export const ClientModel = {
     create,
@@ -158,6 +229,8 @@ export const ClientModel = {
     GetNameClient,
     updateBalance,
     findBalance,
-    
+    updateStatusWeekly,
+    updateStatusBiWeekly,
+    updateStatus
 }
 

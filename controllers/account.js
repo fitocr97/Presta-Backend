@@ -37,6 +37,8 @@ const create = async(req, res) => {
 
             const updateBalance = await ClientModel.updateBalance(aid, newbalance)
             console.log(updateBalance)
+            const updateStatus = await ClientModel.updateStatus(aid)
+            
             return res.status(201).json({ok: true, mgs: updateBalance})
         }
         

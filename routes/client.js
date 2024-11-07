@@ -7,6 +7,10 @@ const router = Router()
 router.post('/create', verifyToken, ClientController.create)
 router.get('/weekly', verifyToken, ClientController.findWeekly)
 router.get('/biweekly', verifyToken, ClientController.findBiWeekly)
+router.get('/updateStatusWeekly', verifyToken, ClientController.updateStatusWeekly)
+router.get('/updateStatusBiWeekly', verifyToken, ClientController.updateStatusBiWeekly)
+router.get('/id', verifyToken, ClientController.findOneByUid)
+router.post('/update', verifyToken, ClientController.updateClient)
 
 
 export default router; //por defecto porque vamos a a tener varias instancias de este
