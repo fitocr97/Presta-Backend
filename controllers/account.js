@@ -53,10 +53,29 @@ const create = async(req, res) => {
 }
 
 
+const findById = async (req, res) => {
+    try {
+        const { aid } = req.query;  // Obtener cud de la URL (query parameters)
+        console.log("cotnrollador acccount find by id")
+        console.log(aid);
+        
+        // Llamada al modelo que busca el cliente por cud
+        const account = await AccountModel.findOneByUid(aid);
 
+        return res.json({ ok: true, msg: account });
+
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            ok: false,
+            msg: 'Error en el servidor'
+        });
+    }
+};
 
 
 
 export const AccountController = {
-    create
+    create,
+    findById
 }

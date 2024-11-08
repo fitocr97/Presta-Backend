@@ -60,23 +60,24 @@ const findBiWeekly= async (req, res) => {
 }
 
 
-const findOneByUid= async (req, res) => {
+const findOneByUid = async (req, res) => {
     try {
+        const { cud } = req.query;  // Obtener cud de la URL (query parameters)
+        console.log(cud);
+        
+        // Llamada al modelo que busca el cliente por cud
+        const clientById = await ClientModel.findOneByUid(cud);
 
-        const {cud} = req.body
-        console.log(cud)
-        const clientById = await ClientModel.findOneByUid(cud) //usa el model
-
-        return res.json({ ok: true, msg: clientById })
+        return res.json({ ok: true, msg: clientById });
 
     } catch (error) {
-        console.log(error)
+        console.log(error);
         return res.status(500).json({
             ok: false,
-            msg: 'Error server'
-        })
+            msg: 'Error en el servidor'
+        });
     }
-}
+};
 
 //actualizar role
 const updateClient = async (req, res) => {

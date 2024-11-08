@@ -26,7 +26,7 @@ const findOneByUid = async (aid) => {
         values: [aid]
     }
     const { rows } = await db.query(query)
-    return rows[0]
+    return rows
 }
 
 const deleteOneByUid = async (aid) => {

@@ -4,7 +4,11 @@ import userRouter from './routes/user.js'
 import clientRouter from './routes/client.js'
 import accountRouter from './routes/account.js'
   
+import cors from "cors";
+
 const app = express();  //server
+
+app.use(cors());
 
 app.use(express.json()) //poder enviar desde el cuerpo del mensaje
 app.use(express.urlencoded({ extended: true }))  //habilitar enviar solicitudes desde formularios html
