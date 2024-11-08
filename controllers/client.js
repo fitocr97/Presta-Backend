@@ -1,4 +1,5 @@
 import { ClientModel } from '../models/client.js'
+import { AccountModel } from '../models/account.js'
 
 const create = async(req, res) => {
     try{
@@ -136,6 +137,29 @@ const updateStatusBiWeekly= async (req, res) => {
     }
 }
 
+const deleteClientAccount = async (req, res) =>{
+    try{
+
+        const {cud} = req.body
+        console.log("entro eliminar")
+        const deleteAccount = await AccountModel.deleteOneByUid(cud)
+        
+        console.log("cuenta: "+ deleteAccount)
+
+
+        const deleteClient = await ClientModel.deleteOneById(cud)
+
+        console.log(deleteClient)
+
+        return res.status(201).json({ok: true, mgs: "Cuenta eliminada ya que cancelo el prestamo"})
+    }catch (error) {
+        console.log(error)
+        return res.status(500).json({
+            ok: false,
+            msg: 'Error server'
+        })
+    }
+}
 
 export const ClientController = {
     create,
@@ -144,5 +168,6 @@ export const ClientController = {
     findOneByUid,
     updateClient,
     updateStatusWeekly,
-    updateStatusBiWeekly
+    updateStatusBiWeekly,
+    deleteClientAccount
 }
