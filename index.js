@@ -3,7 +3,8 @@ import express from 'express';
 import userRouter from './routes/user.js'
 import clientRouter from './routes/client.js'
 import accountRouter from './routes/account.js'
-  
+import './cronjob.js';
+
 import cors from "cors";
 
 const app = express();  //server

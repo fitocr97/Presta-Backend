@@ -12,8 +12,6 @@ const create = async(req, res) => {
 
 
         const balance = await ClientModel.findBalance(aid)
-        console.log(balance)
-        console.log("pasooo luego de balance")
 
         if(payment >= balance ){
             console.log("entro balance payment mayor o igual que balance")
@@ -26,7 +24,7 @@ const create = async(req, res) => {
 
             console.log(deleteClient)
 
-            return res.status(201).json({ok: true, mgs: "Cuenta eliminada ya que cancelo el prestamo"})
+            return res.status(204).json({ok: true, mgs: "Cuenta eliminada ya que cancelo el prestamo"})
             
 
         }else{
