@@ -41,10 +41,21 @@ const deleteOneByUid = async (aid) => {
     return rowCount > 0
 }
 
+const findBalance = async () => {
+    const query = {
+        text: `
+        SELECT SUM(balance) AS total_balance FROM accounts
+        `,
+    }
+    const { rows } = await db.query(query)
+    return rows
+}
+
 
 //exports exportamos el objeto
 export const AccountModel = {
     create,
     findOneByUid,
-    deleteOneByUid
+    deleteOneByUid,
+    findBalance
 }

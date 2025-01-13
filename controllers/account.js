@@ -71,9 +71,28 @@ const findById = async (req, res) => {
     }
 };
 
+const findBalance = async (req, res) => {
+    try {
+        const { aid } = req.query;  // Obtener cud de la URL (query parameters)
+        
+        // Llamada al modelo que busca el cliente por cud
+        const account = await AccountModel.findBalance;
+
+        return res.json({ ok: true, msg: account });
+
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            ok: false,
+            msg: 'Error en el servidor'
+        });
+    }
+};
+
 
 
 export const AccountController = {
     create,
-    findById
+    findById,
+    findBalance
 }
