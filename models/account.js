@@ -46,10 +46,12 @@ const findBalance = async () => {
         text: `
         SELECT SUM(balance) AS total_balance FROM accounts
         `,
-    }
-    const { rows } = await db.query(query)
-    return rows
-}
+    };
+    const { rows } = await db.query(query);
+
+    // Devolver solo el objeto de la primera fila
+    return rows[0];
+};
 
 
 //exports exportamos el objeto
