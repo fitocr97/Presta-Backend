@@ -44,7 +44,7 @@ const deleteOneByUid = async (aid) => {
 const findBalance = async () => {
     const query = {
         text: `
-        SELECT SUM(balance) AS total_balance FROM accounts
+        SELECT SUM(balance) FROM clients
         `,
     };
     const { rows } = await db.query(query);
